@@ -7,14 +7,17 @@
     "viem": "^2.20.1"
   },
   "devDependencies": {
-    "@types/node": "^20.5.0",
+    "@types/node": "^20.16.2",
     "ts-node": "^10.9.2",
+    "tslib": "^2.7.0",
     "typescript": "^5.1.6"
   },
   "scripts": {
     "start": "npx tsx src/index.ts",
     "biconomy": "npx tsx src/biconomy.ts",
     "biconomy:create-sa": "npx tsx src/biconomy.ts create-sa",
-    "biconomy:send-tx": "npx tsx src/biconomy.ts send-tx"
+    "biconomy:send-tx": "npx tsx src/biconomy.ts send-tx",
+    "biconomy:send-gasless-erc20": "npx tsx src/biconomy.ts send-gasless-erc20",
+    "biconomy:send-gasless-erc721": "npx tsx src/biconomy.ts send-gasless-erc721"
   }
 }
