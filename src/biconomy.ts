@@ -1,4 +1,4 @@
-import { createWalletClient, http, createPublicClient } from "viem";
+import { Hex, createWalletClient, http, createPublicClient, parseAbi, encodeFunctionData,  } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { baseSepolia } from "viem/chains";
 import { createSmartAccountClient } from "@biconomy/account";
@@ -10,6 +10,7 @@ const config = {
   privateKey: process.env.PRIVATE_KEY || '',
   bundlerUrl: process.env.BUNDLER_URL || '',
   baseRpcUrl: process.env.RPC_URL || '',
+  nftAddress: "0x1758f42Af7026fBbB559Dc60EcE0De3ef81f665e", // Add your NFT contract address here
 };
 
 // Ensure the private key has the correct '0x' prefix and is of the correct type
@@ -41,6 +42,7 @@ async function createSmartAccount() {
 
     const saAddress = await smartWallet.getAccountAddress();
     console.log("Smart Account Address:", saAddress);
+
     return smartWallet;
   } catch (error) {
     console.error("Error creating Smart Account:", error);
@@ -48,15 +50,40 @@ async function createSmartAccount() {
   }
 }
 
-// Send a transaction
-async function sendTransaction(toAddress: string, transactionData: string) {
+async function getSmartAccount() {
   try {
     const smartWallet = await createSmartAccount();
     if (!smartWallet) return;
 
+    const saAddress = await smartWallet.getAccountAddress();
+    console.log("Smart Account Address:", saAddress);
+
+    return smartWallet;
+  } catch (error) {
+    console.error("Error creating Smart Account:", error);
+    process.exit(1);
+  }
+}
+
+// Send a transaction to mint NFT
+async function sendTransaction(toAddress: string) {
+  try {
+    const smartWallet = await createSmartAccount();
+    if (!smartWallet) return;
+
+    const saAddress = await smartWallet.getAccountAddress();
+
+    // Mint NFT Transaction
+    const parsedAbi = parseAbi(["function safeMint(address _to)"]);
+    const nftData = encodeFunctionData({
+      abi: parsedAbi,
+      functionName: "safeMint",
+      args: [saAddress as Hex],
+    });
+
     const tx = {
-      to: toAddress,
-      data: transactionData,
+      to: config.nftAddress,
+      data: nftData,
     };
 
     const userOpResponse = await smartWallet.sendTransaction(tx);
@@ -68,9 +95,10 @@ async function sendTransaction(toAddress: string, transactionData: string) {
       console.log("UserOp Receipt:", userOpReceipt);
       console.log("Transaction Receipt:", userOpReceipt.receipt);
     }
-  } catch (error) {
-    console.error("Error sending transaction:", error);
-    process.exit(1);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Transaction Error:", error.message);
+    }
   }
 }
 
@@ -81,7 +109,8 @@ if (args.length === 0) {
   console.log("Usage: npm run biconomy <command> [args]");
   console.log("Commands:");
   console.log("  create-sa            Create Smart Account");
-  console.log("  send-tx <to> <data>  Send transaction to address with data");
+  console.log("  send-tx <to>         Send transaction to address");
+  console.log("  get-sa               Get Smart Account Address");
   process.exit(0);
 }
 
@@ -90,12 +119,14 @@ const command = args[0];
 if (command === "create-sa") {
   createSmartAccount();
 } else if (command === "send-tx") {
-  const [to, data] = args.slice(1);
-  if (!to || !data) {
-    console.log("Usage: npm run biconomy send-tx <to> <data>");
+  const [to] = args.slice(1);
+  if (!to) {
+    console.log("Usage: npm run biconomy send-tx <to>");
     process.exit(0);
   }
-  sendTransaction(to, data);
+  sendTransaction(to);
+} else if (command === "get-sa") {
+  getSmartAccount();
 } else {
   console.log("Unknown command:", command);
   process.exit(1);
