@@ -1,12 +1,20 @@
 {
+  "type": "module",
   "dependencies": {
-    "typescript": "^5.5.4"
+    "@biconomy/account": "^4.6.1",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
+    "viem": "^2.20.1"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2"
+    "@types/node": "^20.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.1.6"
   },
   "scripts": {
-  "start": "ts-node src/index.ts"
-}
-
+    "start": "npx tsx src/index.ts",
+    "biconomy": "npx tsx src/biconomy.ts",
+    "biconomy:create-sa": "npx tsx src/biconomy.ts create-sa",
+    "biconomy:send-tx": "npx tsx src/biconomy.ts send-tx"
+  }
 }
