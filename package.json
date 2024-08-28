@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@biconomy/account": "^4.6.1",
     "dotenv": "^16.4.5",
@@ -11,9 +12,9 @@
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "biconomy": "ts-node src/biconomy.ts",
-    "biconomy:create-sa": "ts-node src/biconomy.ts create-sa",
-    "biconomy:send-tx": "ts-node src/biconomy.ts send-tx"
+    "start": "npx tsx src/index.ts",
+    "biconomy": "npx tsx src/biconomy.ts",
+    "biconomy:create-sa": "npx tsx src/biconomy.ts create-sa",
+    "biconomy:send-tx": "npx tsx src/biconomy.ts send-tx"
   }
 }

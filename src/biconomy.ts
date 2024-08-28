@@ -2,7 +2,15 @@ import { createWalletClient, http, createPublicClient } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy, baseSepolia } from "viem/chains";
 import { createSmartAccountClient } from "@biconomy/account";
-import { config } from './config';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const config = {
+  privateKey: process.env.PRIVATE_KEY || '',
+  bundlerUrl: process.env.BUNDLER_URL || '',
+  baseRpcUrl: process.env.RPC_URL || '',
+};
 
 // Ensure the private key has the correct '0x' prefix and is of the correct type
 const privateKey = config.privateKey.startsWith('0x') 
