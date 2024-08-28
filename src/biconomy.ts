@@ -1,6 +1,6 @@
 import { createWalletClient, http, createPublicClient } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { polygonAmoy, baseSepolia } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { createSmartAccountClient } from "@biconomy/account";
 import dotenv from 'dotenv';
 
@@ -21,7 +21,7 @@ const privateKey = config.privateKey.startsWith('0x')
 const account = privateKeyToAccount(privateKey);
 const biconomySigner = createWalletClient({
   account,
-  chain: polygonAmoy,
+  chain: baseSepolia,
   transport: http(),
 });
 
