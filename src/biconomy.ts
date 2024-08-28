@@ -135,7 +135,7 @@ async function sendGaslessTransaction(toAddress: string, transactionData: string
   }
 }
 
-// Send a gasless ERC20 token transfer
+// Send a gasless ERC20 token transfer (e.g., USDC)
 async function sendGaslessERC20(toAddress: string, amount: string) {
   try {
     const smartWallet = await createSmartAccount();
@@ -144,7 +144,7 @@ async function sendGaslessERC20(toAddress: string, amount: string) {
     // Ensure the toAddress starts with '0x'
     const formattedAddress = toAddress.startsWith('0x') ? toAddress as `0x${string}` : `0x${toAddress}` as `0x${string}`;
 
-    // Convert amount to bigint
+    // Convert amount to bigint (1 USDC = 1 * 10^6 units)
     const amountBigInt = BigInt(amount);
 
     // Encode ERC20 transfer function data
@@ -156,7 +156,7 @@ async function sendGaslessERC20(toAddress: string, amount: string) {
     });
 
     const tx = {
-      to: config.erc20Address,
+      to: config.erc20Address, // Your USDC contract address
       data: transactionData,
     };
 
@@ -164,6 +164,7 @@ async function sendGaslessERC20(toAddress: string, amount: string) {
     const userOpResponse = await smartWallet.sendTransaction(tx, {
       paymasterServiceData: { mode: PaymasterMode.SPONSORED },
     });
+
     const { transactionHash } = await userOpResponse.waitForTxHash();
     console.log("Gasless ERC20 Transfer Transaction Hash:", transactionHash);
 
@@ -175,9 +176,16 @@ async function sendGaslessERC20(toAddress: string, amount: string) {
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Gasless ERC20 Transfer Error:", error.message);
+
+      // Additional error logging for debugging
+      if (error.message.includes('getPaymasterAndData')) {
+        console.error("Ensure your Biconomy Paymaster is properly configured and associated with the correct network.");
+      }
     }
   }
 }
+
+
 
 
 // Send a gasless NFT mint transaction
