@@ -1,12 +1,16 @@
 {
   "dependencies": {
-    "typescript": "^5.5.4"
+    "@biconomy/account": "^4.6.1",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2"
+    "@types/node": "^22.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   },
   "scripts": {
-  "start": "ts-node src/index.ts"
-}
-
+    "start": "ts-node src/index.ts",
+    "biconomy": "ts-node src/biconomy.ts"
+  }
 }

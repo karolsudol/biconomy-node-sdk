@@ -1,10 +1,10 @@
-import { ethers } from 'ethers';
+import { ethers, JsonRpcProvider, Wallet } from 'ethers';
 import { createSmartAccountClient } from '@biconomy/account';
 import { config } from './config';
 
 // Initialize provider and signer
-let provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-let signer = new ethers.Wallet(config.privateKey, provider);
+let provider = new JsonRpcProvider(config.rpcUrl);
+let signer = new Wallet(config.privateKey, provider);
 
 // Create Biconomy Smart Account instance
 async function createSmartAccount() {
@@ -19,12 +19,16 @@ async function createSmartAccount() {
     return smartWallet;
   } catch (error) {
     console.error('Error creating Smart Account:', error);
+    process.exit(1);
   }
 }
 
 // Send a transaction
-async function sendTransaction(smartWallet: any, toAddress: string, transactionData: string) {
+async function sendTransaction(toAddress: string, transactionData: string) {
   try {
+    const smartWallet = await createSmartAccount();
+    if (!smartWallet) return;
+
     const tx = {
       to: toAddress,
       data: transactionData,
@@ -41,35 +45,33 @@ async function sendTransaction(smartWallet: any, toAddress: string, transactionD
     }
   } catch (error) {
     console.error('Error sending transaction:', error);
+    process.exit(1);
   }
 }
 
-// Main function to execute the steps
-async function main() {
-  const smartWallet = await createSmartAccount();
-  if (!smartWallet) return;
+// Command-line interface
+const args = process.argv.slice(2);
 
-  const toAddress = '0xaddress'; // Replace with the recipient's address
-  const transactionData = '0x123'; // Replace with actual transaction data
-
-  await sendTransaction(smartWallet, toAddress, transactionData);
+if (args.length === 0) {
+  console.log('Usage: npm run biconomy <command> [args]');
+  console.log('Commands:');
+  console.log('  create-sa            Create Smart Account');
+  console.log('  send-tx <to> <data>  Send transaction to address with data');
+  process.exit(0);
 }
 
-main();
+const command = args[0];
 
-
-
-
-
-// import http from 'http';
-
-// const server = http.createServer((req, res) => {
-//   res.statusCode = 200;
-//   res.setHeader('Content-Type', 'text/plain');
-//   res.end('Hello, World!\n');
-// });
-
-// const port = 3000;
-// server.listen(port, () => {
-//   console.log(`Server running at http://localhost:${port}/`);
-// });
+if (command === 'create-sa') {
+  createSmartAccount();
+} else if (command === 'send-tx') {
+  const [to, data] = args.slice(1);
+  if (!to || !data) {
+    console.log('Usage: npm run biconomy send-tx <to> <data>');
+    process.exit(0);
+  }
+  sendTransaction(to, data);
+} else {
+  console.log('Unknown command:', command);
+  process.exit(1);
+}
