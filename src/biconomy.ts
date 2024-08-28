@@ -1,7 +1,7 @@
 import { Hex, createWalletClient, http, createPublicClient, parseAbi, encodeFunctionData,  } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { baseSepolia } from "viem/chains";
-import { createSmartAccountClient } from "@biconomy/account";
+import { createSmartAccountClient , } from "@biconomy/account";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,7 +10,7 @@ const config = {
   privateKey: process.env.PRIVATE_KEY || '',
   bundlerUrl: process.env.BUNDLER_URL || '',
   baseRpcUrl: process.env.RPC_URL || '',
-  nftAddress: "0x1758f42Af7026fBbB559Dc60EcE0De3ef81f665e", // Add your NFT contract address here
+  nftAddress: "0x6363F3cE562A8480F2F3292c435Ff337eDDA8BA8",
 };
 
 // Ensure the private key has the correct '0x' prefix and is of the correct type
@@ -66,8 +66,9 @@ async function getSmartAccount() {
 }
 
 // Send a transaction to mint NFT
-async function sendTransaction(toAddress: string) {
+async function sendTransaction() {
   try {
+    
     const smartWallet = await createSmartAccount();
     if (!smartWallet) return;
 
