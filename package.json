@@ -18,6 +18,6 @@
     "biconomy:create-sa": "npx tsx src/biconomy.ts create-sa",
     "biconomy:send-tx": "npx tsx src/biconomy.ts send-tx",
     "biconomy:send-gasless-erc20": "npx tsx src/biconomy.ts send-gasless-erc20",
-    "biconomy:send-gasless-erc721": "npx tsx src/biconomy.ts send-gasless-erc721"
+    "biconomy:send-gasless-nft": "npx tsx src/biconomy.ts send-gasless-nft"
   }
 }
