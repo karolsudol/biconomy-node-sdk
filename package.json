@@ -6,12 +6,14 @@
     "viem": "^2.20.1"
   },
   "devDependencies": {
-    "@types/node": "^22.5.1",
+    "@types/node": "^20.5.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.1.6"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "biconomy": "ts-node src/biconomy.ts"
+    "biconomy": "ts-node src/biconomy.ts",
+    "biconomy:create-sa": "ts-node src/biconomy.ts create-sa",
+    "biconomy:send-tx": "ts-node src/biconomy.ts send-tx"
   }
 }
